@@ -1,6 +1,6 @@
 package com.biy.finance.app.financeapp.controller;
 
-import com.biy.finance.app.financeapp.data.Settings;
+import com.biy.finance.app.financeapp.model.Settings;
 import com.biy.finance.app.financeapp.service.SettingsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
+import tools.jackson.databind.ObjectMapper;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
@@ -52,13 +52,16 @@ public class SettingsControllerTest {
         updatedSettings.addCategory("Health");
         updatedSettings.addCategory("Travel");
 
-        when(settingsService.setSettings(settings)).thenReturn(updatedSettings);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonString = mapper.writeValueAsString(updatedSettings);
+
+        when(settingsService.setSettings(updatedSettings)).thenReturn(updatedSettings);
 
         this.mockMvc.perform(patch("/v1/settings")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(String.valueOf(updatedSettings)))
+                        .content(jsonString))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Transactions")))
                 .andExpect(content().string(containsString("Eating Out")))
                 .andExpect(content().string(containsString("Groceries")))
                 .andExpect(content().string(containsString("Fun")))

@@ -1,8 +1,7 @@
 package com.biy.finance.app.financeapp.service;
 
-import com.biy.finance.app.financeapp.data.Settings;
+import com.biy.finance.app.financeapp.model.Settings;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Slf4j

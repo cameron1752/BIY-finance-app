@@ -1,4 +1,4 @@
-package com.biy.finance.app.financeapp.data;
+package com.biy.finance.app.financeapp.model;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +32,4 @@ public class Settings {
     public void addCategory(String category){
         categories.add(category);
     }
-
-
 }
