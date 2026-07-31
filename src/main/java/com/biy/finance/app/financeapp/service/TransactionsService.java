@@ -22,4 +22,12 @@ public class TransactionsService {
     public List<Transaction> getTransaction(int id){
         return dataService.getTransaction(id);
     }
+
+    public List<Transaction> addTransaction(Transaction transaction) {
+        return dataService.addTransaction(transaction);
+    }
+
+    public List<Transaction> deleteTransaction(Integer id) {
+        return dataService.deleteTransaction(id);
+    }
 }

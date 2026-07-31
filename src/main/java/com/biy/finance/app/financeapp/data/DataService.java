@@ -6,7 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -24,11 +26,10 @@ public class DataService {
     }
 
     public List<Transaction> getTransaction(int id){
-        List<Transaction> tempList = new ArrayList<>();
+        Optional<Transaction> found = transactions.stream().filter(
+                t -> t.getId() == (id)).findFirst();
 
-        tempList.add(transactions.get(id-1));
-
-        return tempList;
+        return found.stream().toList();
     }
 
     // temp data
@@ -43,5 +44,16 @@ public class DataService {
         transactions.add(new Transaction(8,"2024-01-22", "Bills", "Con Edison", 132.88, false));
         transactions.add(new Transaction(9,"2024-01-25", "Fun", "Steam Store", 19.99, false));
         transactions.add(new Transaction(10,"2024-01-28", "Health", "Planet Fitness", 24.99, true));
+    }
+
+    public List<Transaction> addTransaction(Transaction transaction) {
+        transactions.add(transaction);
+        return transactions;
+    }
+
+    public List<Transaction> deleteTransaction(Integer id) {
+        Transaction transaction = getTransaction(id).getFirst();
+        transactions.remove(transaction);
+        return getAllTransactions();
     }
 }
