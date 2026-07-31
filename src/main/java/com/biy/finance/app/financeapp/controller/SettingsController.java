@@ -19,19 +19,20 @@ public class SettingsController {
     SettingsService settingsService;
 
     @GetMapping
-    public ResponseEntity getAllSettings(){
+    public ResponseEntity getAllSettings(@RequestHeader(value = "traceId", required = true) String traceId){
         log.info("Getting settings");
         return ResponseEntity.ok(settingsService.getSettings());
     }
 
     @PatchMapping
-    public ResponseEntity updateSettings(@RequestBody Settings settings){
+    public ResponseEntity updateSettings(@RequestHeader(value = "traceId", required = true) String traceId,
+                                        @RequestBody Settings settings){
         log.info("Updating settings to {}", settings);
         return ResponseEntity.ok(settingsService.setSettings(settings));
     }
 
     @DeleteMapping
-    public ResponseEntity deleteSettings(){
+    public ResponseEntity deleteSettings(@RequestHeader(value = "traceId", required = true) String traceId){
         log.info("Deleting settings and restoring to default");
         return ResponseEntity.ok(settingsService.deleteSettings());
     }
