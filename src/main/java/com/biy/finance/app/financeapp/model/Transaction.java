@@ -34,4 +34,24 @@ public class Transaction {
     private int generateId(){
         return (int) (100 * Math.random());
     }
+
+    public Transaction updateFrom(Transaction other) {
+        if (other.date != null && !other.date.equals(this.date)) {
+            this.date = other.date;
+        }
+        if (other.category != null && !other.category.equals(this.category)) {
+            this.category = other.category;
+        }
+        if (other.description != null && !other.description.equals(this.description)) {
+            this.description = other.description;
+        }
+        if (other.amount != this.amount) {
+            this.amount = other.amount;
+        }
+        if (other.pending != this.pending) {
+            this.pending = other.pending;
+        }
+
+        return this;
+    }
 }

@@ -49,4 +49,12 @@ public class TransactionsController {
         return ResponseEntity.ok(transactionsService.deleteTransaction(id));
     }
 
+    @CrossOrigin(origins = "http://localhost:5173")
+    @PatchMapping
+    public ResponseEntity editTransaction(@RequestHeader(value = "traceId", required = true) String traceId,
+                                   @RequestBody Transaction transaction){
+        log.info("Editing bill {}", transaction.getId());
+        return ResponseEntity.ok(transactionsService.editTransaction(transaction));
+    }
+
 }

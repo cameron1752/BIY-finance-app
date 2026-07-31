@@ -27,7 +27,31 @@ public class TransactionsService {
         return dataService.addTransaction(transaction);
     }
 
-    public List<Transaction> deleteTransaction(Integer id) {
+    public List<Transaction> deleteTransaction(int id) {
         return dataService.deleteTransaction(id);
+    }
+
+    public List<Transaction> getAllBills(){
+        return dataService.getAllBills();
+    }
+
+    public List<Transaction> getBill(int id){
+        return dataService.getBill(id);
+    }
+
+    public List<Transaction> addBill(Transaction transaction){
+        return dataService.addBill(transaction);
+    }
+
+    public List<Transaction> deleteBill(int id){
+        return dataService.deleteBill(id);
+    }
+
+    public List<Transaction> editBill(Transaction bill){
+        return dataService.editBill(bill);
+    }
+
+    public List<Transaction> editTransaction(Transaction transaction) {
+        return dataService.editTransaction(transaction);
     }
 }
