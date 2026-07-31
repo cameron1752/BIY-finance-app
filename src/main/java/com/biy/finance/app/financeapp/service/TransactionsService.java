@@ -31,6 +31,10 @@ public class TransactionsService {
         return dataService.deleteTransaction(id);
     }
 
+    public List<Transaction> editTransaction(Transaction transaction) {
+        return dataService.editTransaction(transaction);
+    }
+
     public List<Transaction> getAllBills(){
         return dataService.getAllBills();
     }
@@ -51,7 +55,23 @@ public class TransactionsService {
         return dataService.editBill(bill);
     }
 
-    public List<Transaction> editTransaction(Transaction transaction) {
-        return dataService.editTransaction(transaction);
+    public List<Transaction> getAllIncomes(){
+        return dataService.getAllIncomes();
+    }
+
+    public List<Transaction> getIncome(int id){
+        return dataService.getIncome(id);
+    }
+
+    public List<Transaction> addIncome(Transaction transaction){
+        return dataService.addIncome(transaction);
+    }
+
+    public List<Transaction> deleteIncome(int id){
+        return dataService.deleteIncome(id);
+    }
+
+    public List<Transaction> editIncome(Transaction income){
+        return dataService.editIncome(income);
     }
 }

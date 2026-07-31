@@ -15,11 +15,13 @@ import java.util.Optional;
 public class DataService {
     List<Transaction> transactions = new ArrayList<>();
     List<Transaction> bills = new ArrayList<>();
+    List<Transaction> incomes = new ArrayList<>();
 
     @PostConstruct
     public void init(){
         fillTransactions();
         fillBills();
+        fillIncomes();
     }
 
     // in the future this will connect to APIs or database or something cool
@@ -97,6 +99,43 @@ public class DataService {
         return getAllBills();
     }
 
+    public List<Transaction> getAllIncomes(){
+        return incomes;
+    }
+
+    public List<Transaction> getIncome(int id){
+        Optional<Transaction> found = incomes.stream().filter(
+                t -> t.getId() == (id)).findFirst();
+
+        return found.stream().toList();
+    }
+
+    public List<Transaction> addIncome(Transaction income) {
+        incomes.add(income);
+        return incomes;
+    }
+
+    public List<Transaction> deleteIncome(int id) {
+        Transaction income = getIncome(id).getFirst();
+        incomes.remove(income);
+        return getAllIncomes();
+    }
+
+    public List<Transaction> editIncome(Transaction income){
+        log.info("Editing income {}", income.getId());
+        List<Transaction> foundIncomes = getIncome(income.getId());
+
+        log.info("Removing old income {}", foundIncomes.getFirst());
+        // remove old un-updated bill
+        incomes.remove(foundIncomes.getFirst());
+
+        log.info("Adding new income {}", income);
+        // add new, updated bill
+        incomes.add(foundIncomes.getFirst().updateFrom(income));
+
+        return getAllIncomes();
+    }
+
 
     // temp data
     private void fillTransactions(){
@@ -118,6 +157,14 @@ public class DataService {
         bills.add(new Transaction("2024-01-20", "Loan", "Car Note", 400.00, false));
         bills.add(new Transaction("2024-01-22", "Subscription", "Netflix", 26.99, false));
         bills.add(new Transaction("2024-01-25", "Essential", "Electric", 105.32, false));
+    }
+
+    // temp data
+    private void fillIncomes(){
+        incomes.add(new Transaction("2024-01-01", "Income", "Farm Stand Check", 3500.00, false));
+        incomes.add(new Transaction("2024-01-15", "Income", "Farm Stand Check", 3500.00, true));
+        incomes.add(new Transaction("2024-01-01", "Income", "Other Check", 4500.00, false));
+        incomes.add(new Transaction("2024-01-15", "Income", "Other Check", 4500.00, true));
 
     }
 }
