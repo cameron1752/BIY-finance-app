@@ -32,7 +32,7 @@ public class Transaction {
     }
     // todo: need to make it unique and to support more than 100 transactions
     private int generateId(){
-        return (int) (100 * Math.random());
+        return (int) ((100 * Math.random()) * (100 * Math.random()));
     }
 
     public Transaction updateFrom(Transaction other) {
