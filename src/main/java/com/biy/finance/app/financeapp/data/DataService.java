@@ -59,13 +59,13 @@ public class DataService {
     }
 
     public List<Transaction> addTransaction(Transaction transaction) {
-        transactions.add(transaction);
-        return transactions;
+
+        transactionRepository.save(transaction.toEntity());
+        return getAllTransactions();
     }
 
     public List<Transaction> deleteTransaction(String id) {
-        Transaction transaction = getTransaction(id).getFirst();
-        transactions.remove(transaction);
+        transactionRepository.deleteById(getTransaction(id).getFirst());
         return getAllTransactions();
     }
 
@@ -75,13 +75,13 @@ public class DataService {
 
         log.info("Removing old transaction {}", foundTransactions.getFirst());
         // remove old un-updated bill
-        transactions.remove(foundTransactions.getFirst());
+        deleteTransaction(foundTransactions.getFirst().getId());
 
         log.info("Adding new transaction {}", transaction);
         // add new, updated bill
-        bills.add(foundTransactions.getFirst().updateFrom(transaction));
+        addTransaction(foundTransactions.getFirst().updateFrom(transaction));
 
-        return getAllBills();
+        return getAllTransactions();
     }
 
     public List<Transaction> getAllBills(){

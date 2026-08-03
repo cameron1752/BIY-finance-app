@@ -70,4 +70,18 @@ public class Transaction {
 
         return this;
     }
+
+    public TransactionsEntity toEntity(){
+        TransactionsEntity transactionsEntity = new TransactionsEntity(
+                this.accountId,
+                "tx_" + generateId(),
+                this.date,
+                this.category,
+                this.description,
+                this.amount,
+                this.pending
+        );
+
+        return transactionsEntity;
+    }
 }

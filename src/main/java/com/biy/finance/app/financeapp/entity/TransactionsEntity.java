@@ -2,6 +2,7 @@ package com.biy.finance.app.financeapp.entity;
 
 import com.biy.finance.app.financeapp.model.Transaction;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Audited;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 @Table(name = "transactions", schema = "test")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @IdClass(Transaction.class)
 public class TransactionsEntity {
     @Id
