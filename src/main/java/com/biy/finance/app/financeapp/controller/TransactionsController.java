@@ -21,7 +21,7 @@ public class TransactionsController {
 
     @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping
-    public ResponseEntity getTransactions(@RequestHeader(value = "id", required = false) Integer id,
+    public ResponseEntity getTransactions(@RequestHeader(value = "id", required = false) String id,
                                           @RequestHeader(value = "traceId", required = true) String traceId){
 
         if (isNull(id)){
@@ -44,7 +44,7 @@ public class TransactionsController {
 
     @DeleteMapping
     public ResponseEntity deleteTransaction(@RequestHeader(value = "traceId", required = true) String traceId,
-                                            @RequestHeader(value = "id", required = true) Integer id){
+                                            @RequestHeader(value = "id", required = true) String id){
         log.info("Removing transaction with ID of {}", id);
         return ResponseEntity.ok(transactionsService.deleteTransaction(id));
     }

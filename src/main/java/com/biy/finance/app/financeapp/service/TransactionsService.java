@@ -19,7 +19,7 @@ public class TransactionsService {
         return dataService.getAllTransactions();
     }
 
-    public List<Transaction> getTransaction(int id){
+    public List<Transaction> getTransaction(String id){
         return dataService.getTransaction(id);
     }
 
@@ -27,7 +27,7 @@ public class TransactionsService {
         return dataService.addTransaction(transaction);
     }
 
-    public List<Transaction> deleteTransaction(int id) {
+    public List<Transaction> deleteTransaction(String id) {
         return dataService.deleteTransaction(id);
     }
 
@@ -39,7 +39,7 @@ public class TransactionsService {
         return dataService.getAllBills();
     }
 
-    public List<Transaction> getBill(int id){
+    public List<Transaction> getBill(String id){
         return dataService.getBill(id);
     }
 
@@ -47,7 +47,7 @@ public class TransactionsService {
         return dataService.addBill(transaction);
     }
 
-    public List<Transaction> deleteBill(int id){
+    public List<Transaction> deleteBill(String id){
         return dataService.deleteBill(id);
     }
 
@@ -59,7 +59,7 @@ public class TransactionsService {
         return dataService.getAllIncomes();
     }
 
-    public List<Transaction> getIncome(int id){
+    public List<Transaction> getIncome(String id){
         return dataService.getIncome(id);
     }
 
@@ -67,7 +67,7 @@ public class TransactionsService {
         return dataService.addIncome(transaction);
     }
 
-    public List<Transaction> deleteIncome(int id){
+    public List<Transaction> deleteIncome(String id){
         return dataService.deleteIncome(id);
     }
 

@@ -1,23 +1,39 @@
 package com.biy.finance.app.financeapp.model;
 
+import com.biy.finance.app.financeapp.entity.TransactionsEntity;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class Transaction {
-    private int id;
-    private String date;
+    private String accountId;
+    private String id;
+    private LocalDate date;
     private String category;
     private String description;
     private double amount;
     private boolean pending;
 
+    public Transaction(TransactionsEntity transactionEntity){
+        this.accountId = transactionEntity.getAccountId();
+        this.id = transactionEntity.getId();
+        this.date = transactionEntity.getDate();
+        this.category = transactionEntity.getCategory();
+        this.description = transactionEntity.getDescription();
+        this.amount = transactionEntity.getAmount();
+        this.pending = transactionEntity.getPending();
+    }
+
     @JsonCreator
     public Transaction(
-            @JsonProperty("date") String date,
+            @JsonProperty("date") LocalDate date,
             @JsonProperty("category") String category,
             @JsonProperty("description") String description,
             @JsonProperty("amount") double amount,
@@ -31,8 +47,8 @@ public class Transaction {
         this.id = generateId();
     }
     // todo: need to make it unique and to support more than 100 transactions
-    private int generateId(){
-        return (int) ((100 * Math.random()) * (100 * Math.random()));
+    private String generateId(){
+        return Integer.toString((int) ((100 * Math.random()) * (100 * Math.random())));
     }
 
     public Transaction updateFrom(Transaction other) {
