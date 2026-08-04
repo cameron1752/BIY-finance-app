@@ -21,7 +21,7 @@ public class IncomeController {
 
     @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping
-    public ResponseEntity getIncomes(@RequestHeader(value = "id", required = false) Integer id,
+    public ResponseEntity getIncomes(@RequestHeader(value = "id", required = false) String id,
                                    @RequestHeader(value = "traceId", required = true) String traceId){
 
         if (isNull(id)){
@@ -44,7 +44,7 @@ public class IncomeController {
     @CrossOrigin(origins = "http://localhost:5173")
     @DeleteMapping
     public ResponseEntity deleteIncome(@RequestHeader(value = "traceId", required = true) String traceId,
-                                     @RequestHeader(value = "id", required = true) Integer id){
+                                     @RequestHeader(value = "id", required = true) String id){
         log.info("Removing Income with ID of {}", id);
         return ResponseEntity.ok(transactionsService.deleteIncome(id));
     }
