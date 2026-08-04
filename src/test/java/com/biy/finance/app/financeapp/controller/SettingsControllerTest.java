@@ -37,7 +37,8 @@ public class SettingsControllerTest {
     public void getAllSettingsTest() throws Exception {
         when(settingsService.getSettings()).thenReturn(settings);
 
-        this.mockMvc.perform(get("/v1/settings"))
+        this.mockMvc.perform(get("/v1/settings")
+                        .header("traceId", "testTraceId"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Transactions")))
                 .andExpect(content().string(containsString("Eating Out")))
@@ -59,6 +60,7 @@ public class SettingsControllerTest {
         when(settingsService.setSettings(updatedSettings)).thenReturn(updatedSettings);
 
         this.mockMvc.perform(patch("/v1/settings")
+                        .header("traceId", "testTraceId")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonString))
                 .andExpect(status().isOk())
