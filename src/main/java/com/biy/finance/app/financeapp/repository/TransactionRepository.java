@@ -23,11 +23,9 @@ public interface TransactionRepository extends JpaRepository<TransactionsEntity,
 
     @Query(value = "SELECT t FROM TransactionsEntity t " +
             "WHERE t.accountId = :account_id AND " +
-            "t.id = :transaction_id AND " +
-            "t.type = :transaction_type")
+            "t.id = :transaction_id ")
     List<TransactionsEntity> fetchByType(@Param("account_id") String accountId,
-                                         @Param("transaction_id") String id,
-                                         @Param("transaction_type") String type);
+                                         @Param("transaction_id") String id);
 
     // Query by a non-key column
     List<Transaction> findByPending(Boolean pending, String type);

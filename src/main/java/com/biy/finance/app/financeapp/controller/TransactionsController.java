@@ -2,6 +2,7 @@ package com.biy.finance.app.financeapp.controller;
 
 import com.biy.finance.app.financeapp.model.Transaction;
 import com.biy.finance.app.financeapp.service.TransactionsService;
+import com.biy.finance.app.financeapp.util.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +27,10 @@ public class TransactionsController {
                                           @RequestHeader(value = "accountId", required = true) String accountId){
 
         if (isNull(id)){
-            log.info("Getting all transactions");
-            return ResponseEntity.ok(transactionsService.getAllTransactions(accountId));
+            log.info("Getting all {} for account {}", Constants.TRANSACTION, accountId);
+            return ResponseEntity.ok(transactionsService.getAllTransactions(accountId, Constants.TRANSACTION));
         } else {
-            log.info("Getting transaction with ID {}", id);
+            log.info("Getting transaction with ID {} for account {}", id, accountId);
             return ResponseEntity.ok(transactionsService.getTransaction(accountId, id));
         }
     }

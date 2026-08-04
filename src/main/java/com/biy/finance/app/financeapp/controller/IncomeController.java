@@ -2,6 +2,7 @@ package com.biy.finance.app.financeapp.controller;
 
 import com.biy.finance.app.financeapp.model.Transaction;
 import com.biy.finance.app.financeapp.service.TransactionsService;
+import com.biy.finance.app.financeapp.util.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,14 +23,15 @@ public class IncomeController {
     @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping
     public ResponseEntity getIncomes(@RequestHeader(value = "id", required = false) String id,
-                                   @RequestHeader(value = "traceId", required = true) String traceId){
+                                   @RequestHeader(value = "traceId", required = true) String traceId,
+                                     @RequestHeader(value = "accountId", required = true) String accountId){
 
         if (isNull(id)){
             log.info("Getting all Incomes");
-            return ResponseEntity.ok(transactionsService.getAllIncomes());
+            return ResponseEntity.ok(transactionsService.getAllTransactions(accountId, Constants.INCOME));
         } else {
             log.info("Getting Income with ID {}", id);
-            return ResponseEntity.ok(transactionsService.getIncome(id));
+            return ResponseEntity.ok(transactionsService.getTransaction(accountId, id));
         }
     }
     @CrossOrigin(origins = "http://localhost:5173")
@@ -38,15 +40,16 @@ public class IncomeController {
                                   @RequestBody Transaction Income){
 
         log.info("Adding Income {}", Income);
-        return ResponseEntity.ok(transactionsService.addIncome(Income));
+        return ResponseEntity.ok(transactionsService.addTransaction(Income));
 
     }
     @CrossOrigin(origins = "http://localhost:5173")
     @DeleteMapping
     public ResponseEntity deleteIncome(@RequestHeader(value = "traceId", required = true) String traceId,
-                                     @RequestHeader(value = "id", required = true) String id){
+                                     @RequestHeader(value = "id", required = true) String id,
+                                       @RequestHeader(value = "accountId", required = true) String accountId){
         log.info("Removing Income with ID of {}", id);
-        return ResponseEntity.ok(transactionsService.deleteIncome(id));
+        return ResponseEntity.ok(transactionsService.deleteTransaction(accountId, id));
     }
 
     @CrossOrigin(origins = "http://localhost:5173")
@@ -54,7 +57,7 @@ public class IncomeController {
     public ResponseEntity editIncome(@RequestHeader(value = "traceId", required = true) String traceId,
                                    @RequestBody Transaction Income){
         log.info("Editing Income {}", Income.getId());
-        return ResponseEntity.ok(transactionsService.editIncome(Income));
+        return ResponseEntity.ok(transactionsService.editTransaction(Income));
     }
 
 }
