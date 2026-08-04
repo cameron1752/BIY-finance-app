@@ -38,4 +38,7 @@ public class TransactionsEntity {
 
     @Column(name = "pending")
     private Boolean pending;
+
+    @Column(name = "transaction_type")
+    private String type;
 }

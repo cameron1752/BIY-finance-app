@@ -22,14 +22,15 @@ public class TransactionsController {
     @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping
     public ResponseEntity getTransactions(@RequestHeader(value = "id", required = false) String id,
-                                          @RequestHeader(value = "traceId", required = true) String traceId){
+                                          @RequestHeader(value = "traceId", required = true) String traceId,
+                                          @RequestHeader(value = "accountId", required = true) String accountId){
 
         if (isNull(id)){
             log.info("Getting all transactions");
-            return ResponseEntity.ok(transactionsService.getAllTransactions());
+            return ResponseEntity.ok(transactionsService.getAllTransactions(accountId));
         } else {
             log.info("Getting transaction with ID {}", id);
-            return ResponseEntity.ok(transactionsService.getTransaction(id));
+            return ResponseEntity.ok(transactionsService.getTransaction(accountId, id));
         }
     }
 
@@ -44,9 +45,10 @@ public class TransactionsController {
 
     @DeleteMapping
     public ResponseEntity deleteTransaction(@RequestHeader(value = "traceId", required = true) String traceId,
-                                            @RequestHeader(value = "id", required = true) String id){
+                                            @RequestHeader(value = "id", required = true) String id,
+                                            @RequestHeader(value = "accountId", required = true) String accountId){
         log.info("Removing transaction with ID of {}", id);
-        return ResponseEntity.ok(transactionsService.deleteTransaction(id));
+        return ResponseEntity.ok(transactionsService.deleteTransaction(accountId, id));
     }
 
     @CrossOrigin(origins = "http://localhost:5173")

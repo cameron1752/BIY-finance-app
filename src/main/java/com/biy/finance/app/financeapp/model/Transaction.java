@@ -6,11 +6,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class Transaction {
     private String accountId;
@@ -20,6 +20,7 @@ public class Transaction {
     private String description;
     private double amount;
     private boolean pending;
+    private String type;
 
     public Transaction(TransactionsEntity transactionEntity){
         this.accountId = transactionEntity.getAccountId();
@@ -29,22 +30,28 @@ public class Transaction {
         this.description = transactionEntity.getDescription();
         this.amount = transactionEntity.getAmount();
         this.pending = transactionEntity.getPending();
+        this.type = transactionEntity.getType();
     }
 
     @JsonCreator
     public Transaction(
+            @JsonProperty("id") String id,
+            @JsonProperty("accountId") String accountId,
             @JsonProperty("date") LocalDate date,
             @JsonProperty("category") String category,
             @JsonProperty("description") String description,
             @JsonProperty("amount") double amount,
-            @JsonProperty("pending") boolean pending
+            @JsonProperty("pending") boolean pending,
+            @JsonProperty("type") String type
     ) {
         this.date = date;
         this.category = category;
         this.description = description;
         this.amount = amount;
         this.pending = pending;
-        this.id = generateId();
+        this.id = id;
+        this.accountId = accountId;
+        this.type = type;
     }
     // todo: need to make it unique and to support more than 100 transactions
     private String generateId(){
@@ -67,21 +74,33 @@ public class Transaction {
         if (other.pending != this.pending) {
             this.pending = other.pending;
         }
+        if (other.type != null && !other.category.equals(this.type)){
+            this.type = other.type;
+        }
+
+        this.id = other.id;
 
         return this;
     }
 
-    public TransactionsEntity toEntity(){
-        TransactionsEntity transactionsEntity = new TransactionsEntity(
+    public TransactionsEntity toEntity(String type){
+        String id;
+
+        if (!StringUtils.hasText(this.id)){
+            id = "tx_" + generateId();
+        } else {
+            id = this.id;
+        }
+
+        return new TransactionsEntity(
                 this.accountId,
-                "tx_" + generateId(),
+                id,
                 this.date,
                 this.category,
                 this.description,
                 this.amount,
-                this.pending
+                this.pending,
+                type
         );
-
-        return transactionsEntity;
     }
 }

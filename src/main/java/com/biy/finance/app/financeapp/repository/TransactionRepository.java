@@ -3,6 +3,8 @@ package com.biy.finance.app.financeapp.repository;
 import com.biy.finance.app.financeapp.entity.TransactionsEntity;
 import com.biy.finance.app.financeapp.model.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,11 +13,22 @@ import java.util.List;
 public interface TransactionRepository extends JpaRepository<TransactionsEntity, Transaction> {
 
     // Query by just one part of the composite key
-    List<TransactionsEntity> findByAccountId(String accountId);
+    List<TransactionsEntity> findByAccountId(String accountId, String type);
 
-    // Query by both parts of the composite key
-    List<TransactionsEntity> findByAccountIdAndId(String accountId, String id);
+    @Query(value = "SELECT t FROM TransactionsEntity t " +
+            "WHERE t.accountId = :account_id AND " +
+            "t.type = :transaction_type")
+    List<TransactionsEntity> fetchAllByType(@Param("account_id") String accountId,
+                                         @Param("transaction_type") String type);
+
+    @Query(value = "SELECT t FROM TransactionsEntity t " +
+            "WHERE t.accountId = :account_id AND " +
+            "t.id = :transaction_id AND " +
+            "t.type = :transaction_type")
+    List<TransactionsEntity> fetchByType(@Param("account_id") String accountId,
+                                         @Param("transaction_id") String id,
+                                         @Param("transaction_type") String type);
 
     // Query by a non-key column
-    List<Transaction> findByPending(Boolean pending);
+    List<Transaction> findByPending(Boolean pending, String type);
 }
