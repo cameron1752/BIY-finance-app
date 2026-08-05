@@ -12,6 +12,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -52,6 +53,9 @@ class BillsControllerTest {
     @BeforeEach
     void setUp() {
         transaction = new Transaction();
+        transaction.setAccountId("123abc456def");
+        transaction.setCategory("test");
+        transaction.setDate(LocalDate.now());
     }
 
     // ---------------------------------------------------------------------

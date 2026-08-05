@@ -3,6 +3,7 @@ package com.biy.finance.app.financeapp.controller;
 import com.biy.finance.app.financeapp.model.Transaction;
 import com.biy.finance.app.financeapp.service.TransactionsService;
 import com.biy.finance.app.financeapp.util.Constants;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ public class BillsController {
     @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping
     public ResponseEntity addBill(@RequestHeader(value = "traceId", required = true) String traceId,
-                                         @RequestBody Transaction bill){
+                                  @Valid @RequestBody Transaction bill){
 
         log.info("Adding bill {}", bill);
         return ResponseEntity.ok(transactionsService.addTransaction(bill));
@@ -55,7 +56,7 @@ public class BillsController {
     @CrossOrigin(origins = "http://localhost:5173")
     @PatchMapping
     public ResponseEntity editBill(@RequestHeader(value = "traceId", required = true) String traceId,
-                                   @RequestBody Transaction bill){
+                                   @Valid @RequestBody Transaction bill){
         log.info("Editing bill {}", bill.getId());
         return ResponseEntity.ok(transactionsService.editTransaction(bill));
     }
