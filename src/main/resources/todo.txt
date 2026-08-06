@@ -1,5 +1,5 @@
-// todo: add income to database
 // todo: create account and fill it out w/ data from database
-// todo: unit tests
 // todo: error handling
-// todo: request validation
+// todo: sums on categories
+// todo: add balances n such to account
+// todo: auth ;)
