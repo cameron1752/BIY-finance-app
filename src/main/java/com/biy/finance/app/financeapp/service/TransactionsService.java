@@ -15,8 +15,8 @@ public class TransactionsService {
     @Autowired
     DataService dataService;
 
-    public List<Transaction> getAllTransactions(String accountId){
-        return dataService.getAllTransactions(accountId);
+    public List<Transaction> getAllTransactions(String accountId, String type){
+        return dataService.getAllTransactions(accountId, type);
     }
 
     public List<Transaction> getTransaction(String accountId, String id){
@@ -33,45 +33,5 @@ public class TransactionsService {
 
     public List<Transaction> editTransaction(Transaction transaction) {
         return dataService.editTransaction(transaction);
-    }
-
-    public List<Transaction> getAllBills(String accountId){
-        return dataService.getAllBills(accountId);
-    }
-
-    public List<Transaction> getBill(String accountId, String id){
-        return dataService.getBill(accountId, id);
-    }
-
-    public List<Transaction> addBill(Transaction transaction){
-        return dataService.addBill(transaction);
-    }
-
-    public List<Transaction> deleteBill(String accountId, String id){
-        return dataService.deleteBill(accountId, id);
-    }
-
-    public List<Transaction> editBill(Transaction bill){
-        return dataService.editBill(bill);
-    }
-
-    public List<Transaction> getAllIncomes(){
-        return dataService.getAllIncomes();
-    }
-
-    public List<Transaction> getIncome(String id){
-        return dataService.getIncome(id);
-    }
-
-    public List<Transaction> addIncome(Transaction transaction){
-        return dataService.addIncome(transaction);
-    }
-
-    public List<Transaction> deleteIncome(String id){
-        return dataService.deleteIncome(id);
-    }
-
-    public List<Transaction> editIncome(Transaction income){
-        return dataService.editIncome(income);
     }
 }

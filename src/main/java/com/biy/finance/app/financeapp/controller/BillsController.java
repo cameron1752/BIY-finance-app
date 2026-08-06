@@ -2,6 +2,8 @@ package com.biy.finance.app.financeapp.controller;
 
 import com.biy.finance.app.financeapp.model.Transaction;
 import com.biy.finance.app.financeapp.service.TransactionsService;
+import com.biy.finance.app.financeapp.util.Constants;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,20 +28,20 @@ public class BillsController {
                                    @RequestHeader(value = "accountId", required = true) String accountId){
 
         if (isNull(id)){
-            log.info("Getting all bills");
-            return ResponseEntity.ok(transactionsService.getAllBills(accountId));
+            log.info("Getting all {} for account {}", Constants.BILL, accountId);
+            return ResponseEntity.ok(transactionsService.getAllTransactions(accountId, Constants.BILL));
         } else {
-            log.info("Getting bill with ID {}", id);
-            return ResponseEntity.ok(transactionsService.getBill(accountId, id));
+            log.info("Getting transaction with ID {} for account {}", id, accountId);
+            return ResponseEntity.ok(transactionsService.getTransaction(accountId, id));
         }
     }
     @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping
     public ResponseEntity addBill(@RequestHeader(value = "traceId", required = true) String traceId,
-                                         @RequestBody Transaction bill){
+                                  @Valid @RequestBody Transaction bill){
 
         log.info("Adding bill {}", bill);
-        return ResponseEntity.ok(transactionsService.addBill(bill));
+        return ResponseEntity.ok(transactionsService.addTransaction(bill));
 
     }
     @CrossOrigin(origins = "http://localhost:5173")
@@ -48,15 +50,15 @@ public class BillsController {
                                         @RequestHeader(value = "id", required = true) String id,
                                         @RequestHeader(value = "accountId", required = true) String accountId){
         log.info("Removing bill with ID of {}", id);
-        return ResponseEntity.ok(transactionsService.deleteBill(accountId, id));
+        return ResponseEntity.ok(transactionsService.deleteTransaction(accountId, id));
     }
 
     @CrossOrigin(origins = "http://localhost:5173")
     @PatchMapping
     public ResponseEntity editBill(@RequestHeader(value = "traceId", required = true) String traceId,
-                                   @RequestBody Transaction bill){
+                                   @Valid @RequestBody Transaction bill){
         log.info("Editing bill {}", bill.getId());
-        return ResponseEntity.ok(transactionsService.editBill(bill));
+        return ResponseEntity.ok(transactionsService.editTransaction(bill));
     }
 
 }

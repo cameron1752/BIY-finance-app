@@ -2,6 +2,8 @@ package com.biy.finance.app.financeapp.controller;
 
 import com.biy.finance.app.financeapp.model.Transaction;
 import com.biy.finance.app.financeapp.service.TransactionsService;
+import com.biy.finance.app.financeapp.util.Constants;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,17 +28,18 @@ public class TransactionsController {
                                           @RequestHeader(value = "accountId", required = true) String accountId){
 
         if (isNull(id)){
-            log.info("Getting all transactions");
-            return ResponseEntity.ok(transactionsService.getAllTransactions(accountId));
+            log.info("Getting all {} for account {}", Constants.TRANSACTION, accountId);
+            return ResponseEntity.ok(transactionsService.getAllTransactions(accountId, Constants.TRANSACTION));
         } else {
-            log.info("Getting transaction with ID {}", id);
+            log.info("Getting transaction with ID {} for account {}", id, accountId);
             return ResponseEntity.ok(transactionsService.getTransaction(accountId, id));
         }
     }
 
+    @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping
     public ResponseEntity addTransaction(@RequestHeader(value = "traceId", required = true) String traceId,
-                                         @RequestBody Transaction transaction){
+                                         @Valid @RequestBody Transaction transaction){
 
         log.info("Adding transaction {}", transaction);
         return ResponseEntity.ok(transactionsService.addTransaction(transaction));
@@ -54,7 +57,7 @@ public class TransactionsController {
     @CrossOrigin(origins = "http://localhost:5173")
     @PatchMapping
     public ResponseEntity editTransaction(@RequestHeader(value = "traceId", required = true) String traceId,
-                                   @RequestBody Transaction transaction){
+                                          @Valid @RequestBody Transaction transaction){
         log.info("Editing bill {}", transaction.getId());
         return ResponseEntity.ok(transactionsService.editTransaction(transaction));
     }
