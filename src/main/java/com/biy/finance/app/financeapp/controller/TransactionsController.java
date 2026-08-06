@@ -36,6 +36,7 @@ public class TransactionsController {
         }
     }
 
+    @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping
     public ResponseEntity addTransaction(@RequestHeader(value = "traceId", required = true) String traceId,
                                          @Valid @RequestBody Transaction transaction){

@@ -2,7 +2,9 @@ package com.biy.finance.app.financeapp.repository;
 
 import com.biy.finance.app.financeapp.entity.TransactionsEntity;
 import com.biy.finance.app.financeapp.model.Transaction;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -27,6 +29,11 @@ public interface TransactionRepository extends JpaRepository<TransactionsEntity,
     List<TransactionsEntity> fetchByType(@Param("account_id") String accountId,
                                          @Param("transaction_id") String id);
 
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM TransactionsEntity t " +
+                "WHERE t.id = :id")
+    void deleteById(@Param("id") String id);
     // Query by a non-key column
     List<Transaction> findByPending(Boolean pending, String type);
 }

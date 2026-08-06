@@ -128,7 +128,7 @@ class DataServiceTest {
 
         List<Transaction> result = dataService.deleteTransaction(ACCOUNT_ID, TRANSACTION_ID);
 
-        verify(transactionRepository).deleteById(any());
+        verify(transactionRepository).deleteById(anyString());
         assertThat(result).isEmpty();
     }
 
@@ -142,7 +142,7 @@ class DataServiceTest {
 
         List<Transaction> result = dataService.editTransaction(transaction);
 
-        verify(transactionRepository).deleteById(any());
+        verify(transactionRepository).deleteById(anyString());
         verify(transactionRepository).save(any(TransactionsEntity.class));
         assertThat(result).hasSize(1);
     }

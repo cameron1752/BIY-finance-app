@@ -6,9 +6,12 @@ import com.biy.finance.app.financeapp.model.Transaction;
 import com.biy.finance.app.financeapp.repository.TransactionRepository;
 import com.biy.finance.app.financeapp.service.SettingsService;
 import com.biy.finance.app.financeapp.util.Constants;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -16,6 +19,9 @@ import java.util.*;
 @Service
 public class DataService {
     Account account = new Account();
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     TransactionRepository transactionRepository;
@@ -49,14 +55,14 @@ public class DataService {
     }
 
     public List<Transaction> addTransaction(Transaction transaction) {
-
         transactionRepository.save(transaction.toEntity(transaction.getType()));
         return getAllTransactions(transaction.getAccountId(), transaction.getType());
     }
 
+    @Transactional
     public List<Transaction> deleteTransaction(String accountId, String id) {
         List<Transaction> foundTransaction = getTransaction(accountId, id);
-        transactionRepository.deleteById(foundTransaction.getFirst());
+        transactionRepository.deleteById(id);
         return getAllTransactions(accountId, foundTransaction.getFirst().getType());
     }
 

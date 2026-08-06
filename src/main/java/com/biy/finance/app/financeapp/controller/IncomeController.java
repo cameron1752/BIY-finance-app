@@ -16,7 +16,7 @@ import static java.util.Objects.isNull;
 
 @Slf4j
 @Controller
-@RequestMapping("/v1/income")
+@RequestMapping("/v1/incomes")
 public class IncomeController {
     @Autowired
     TransactionsService transactionsService;
