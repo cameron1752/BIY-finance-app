@@ -1,8 +1,11 @@
 package com.biy.finance.app.financeapp.model;
 
 import com.biy.finance.app.financeapp.entity.TransactionsEntity;
+import com.biy.finance.app.financeapp.util.ValidTransaction;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,8 +13,10 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 
+
 @Data
 @NoArgsConstructor
+@ValidTransaction
 public class Transaction {
     private String accountId;
     private String id;

@@ -1,4 +1,6 @@
-// todo: add income to database
 // todo: create account and fill it out w/ data from database
-// todo: unit tests
 // todo: error handling
+// todo: sums on categories
+// todo: add balances n such to account
+// todo: auth ;)
+// todo: update cards after updates / additions

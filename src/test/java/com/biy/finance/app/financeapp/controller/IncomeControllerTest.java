@@ -12,6 +12,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
+import java.sql.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,8 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * - Since the controller has no @ExceptionHandler / @ControllerAdvice, an unhandled
  *   exception thrown by the service bubbles up as an HTTP 500 in these tests.
  */
-@WebMvcTest(TransactionsController.class)
-class TransactionsControllerTest {
+@WebMvcTest(IncomeController.class)
+class IncomeControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -44,7 +45,7 @@ class TransactionsControllerTest {
     @MockitoBean
     private TransactionsService transactionsService;
 
-    private static final String BASE_URL = "/v1/transactions";
+    private static final String BASE_URL = "/v1/incomes";
     private static final String TRACE_ID = "trace-123";
     private static final String ACCOUNT_ID = "account-456";
     private static final String TRANSACTION_ID = "txn-789";
@@ -69,14 +70,14 @@ class TransactionsControllerTest {
     @Test
     void getTransactions_withoutId_returnsAllTransactionsForAccount() throws Exception {
         List<Transaction> transactions = Collections.singletonList(transaction);
-        when(transactionsService.getAllTransactions(ACCOUNT_ID, Constants.TRANSACTION)).thenReturn(transactions);
+        when(transactionsService.getAllTransactions(ACCOUNT_ID, Constants.INCOME)).thenReturn(transactions);
 
         mockMvc.perform(get(BASE_URL)
                         .header("traceId", TRACE_ID)
                         .header("accountId", ACCOUNT_ID))
                 .andExpect(status().isOk());
 
-        verify(transactionsService, times(1)).getAllTransactions(ACCOUNT_ID, Constants.TRANSACTION);
+        verify(transactionsService, times(1)).getAllTransactions(ACCOUNT_ID, Constants.INCOME);
         verify(transactionsService, never()).getTransaction(anyString(), anyString());
     }
 
@@ -114,7 +115,7 @@ class TransactionsControllerTest {
 
     @Test
     void getTransactions_serviceThrowsException_returnsServerError() throws Exception {
-        when(transactionsService.getAllTransactions(ACCOUNT_ID, Constants.TRANSACTION))
+        when(transactionsService.getAllTransactions(ACCOUNT_ID, Constants.INCOME))
                 .thenThrow(new RuntimeException("boom"));
 
         mockMvc.perform(get(BASE_URL)
@@ -131,7 +132,7 @@ class TransactionsControllerTest {
     void addTransaction_validRequest_returnsCreatedTransaction() throws Exception {
         when(transactionsService.addTransaction(
                 Collections.singletonList(any(Transaction.class))))
-                .thenReturn(Collections.singletonList(transaction));
+                .thenReturn(transactions);
 
         mockMvc.perform(post(BASE_URL)
                         .header("traceId", TRACE_ID)
@@ -139,7 +140,8 @@ class TransactionsControllerTest {
                         .content(objectMapper.writeValueAsString(transactions)))
                 .andExpect(status().isOk());
 
-        verify(transactionsService, times(1)).addTransaction(transactions);
+        verify(transactionsService, times(1))
+                .addTransaction(transactions);
     }
 
     @Test
@@ -247,7 +249,7 @@ class TransactionsControllerTest {
     void editTransaction_missingTraceId_returnsBadRequest() throws Exception {
         mockMvc.perform(patch(BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(transaction)))
+                        .content(objectMapper.writeValueAsString(transactions)))
                 .andExpect(status().isBadRequest());
 
         verifyNoInteractions(transactionsService);

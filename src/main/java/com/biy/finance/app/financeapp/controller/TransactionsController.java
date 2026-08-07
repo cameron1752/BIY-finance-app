@@ -2,6 +2,8 @@ package com.biy.finance.app.financeapp.controller;
 
 import com.biy.finance.app.financeapp.model.Transaction;
 import com.biy.finance.app.financeapp.service.TransactionsService;
+import com.biy.finance.app.financeapp.util.Constants;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static java.util.Objects.isNull;
 
@@ -26,20 +30,21 @@ public class TransactionsController {
                                           @RequestHeader(value = "accountId", required = true) String accountId){
 
         if (isNull(id)){
-            log.info("Getting all transactions");
-            return ResponseEntity.ok(transactionsService.getAllTransactions(accountId));
+            log.info("Getting all {} for account {}", Constants.TRANSACTION, accountId);
+            return ResponseEntity.ok(transactionsService.getAllTransactions(accountId, Constants.TRANSACTION));
         } else {
-            log.info("Getting transaction with ID {}", id);
+            log.info("Getting transaction with ID {} for account {}", id, accountId);
             return ResponseEntity.ok(transactionsService.getTransaction(accountId, id));
         }
     }
 
+    @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping
     public ResponseEntity addTransaction(@RequestHeader(value = "traceId", required = true) String traceId,
-                                         @RequestBody Transaction transaction){
+                                         @Valid @RequestBody List<Transaction> transactions){
 
-        log.info("Adding transaction {}", transaction);
-        return ResponseEntity.ok(transactionsService.addTransaction(transaction));
+        log.info("Adding transactions {}", transactions);
+        return ResponseEntity.ok(transactionsService.addTransaction(transactions));
 
     }
 
@@ -54,9 +59,9 @@ public class TransactionsController {
     @CrossOrigin(origins = "http://localhost:5173")
     @PatchMapping
     public ResponseEntity editTransaction(@RequestHeader(value = "traceId", required = true) String traceId,
-                                   @RequestBody Transaction transaction){
-        log.info("Editing bill {}", transaction.getId());
-        return ResponseEntity.ok(transactionsService.editTransaction(transaction));
+                                          @Valid @RequestBody List<Transaction> transactions){
+        log.info("Editing transactions {}", transactions);
+        return ResponseEntity.ok(transactionsService.editTransaction(transactions));
     }
 
 }
