@@ -23,8 +23,8 @@ public class TransactionsService {
         return dataService.getTransaction(accountId, id);
     }
 
-    public List<Transaction> addTransaction(Transaction transaction) {
-        return dataService.addTransaction(transaction);
+    public List<Transaction> addTransaction(List<Transaction> transactions) {
+        return dataService.addTransaction(transactions);
     }
 
     public List<Transaction> deleteTransaction(String accountId, String id) {

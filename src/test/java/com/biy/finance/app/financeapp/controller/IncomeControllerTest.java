@@ -12,7 +12,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
+import java.sql.Array;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -43,12 +45,13 @@ class IncomeControllerTest {
     @MockitoBean
     private TransactionsService transactionsService;
 
-    private static final String BASE_URL = "/v1/income";
+    private static final String BASE_URL = "/v1/incomes";
     private static final String TRACE_ID = "trace-123";
     private static final String ACCOUNT_ID = "account-456";
     private static final String TRANSACTION_ID = "txn-789";
 
     private Transaction transaction;
+    private List<Transaction> transactions = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
@@ -56,6 +59,8 @@ class IncomeControllerTest {
         transaction.setAccountId("123abc456def");
         transaction.setCategory("test");
         transaction.setDate(LocalDate.now());
+
+        transactions.add(transaction);
     }
 
     // ---------------------------------------------------------------------
@@ -125,15 +130,18 @@ class IncomeControllerTest {
 
     @Test
     void addTransaction_validRequest_returnsCreatedTransaction() throws Exception {
-        when(transactionsService.addTransaction(any(Transaction.class))).thenReturn(Collections.singletonList(transaction));
+        when(transactionsService.addTransaction(
+                Collections.singletonList(any(Transaction.class))))
+                .thenReturn(transactions);
 
         mockMvc.perform(post(BASE_URL)
                         .header("traceId", TRACE_ID)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(transaction)))
+                        .content(objectMapper.writeValueAsString(transactions)))
                 .andExpect(status().isOk());
 
-        verify(transactionsService, times(1)).addTransaction(any(Transaction.class));
+        verify(transactionsService, times(1))
+                .addTransaction(transactions);
     }
 
     @Test
@@ -159,13 +167,13 @@ class IncomeControllerTest {
 
     @Test
     void addTransaction_serviceThrowsException_returnsServerError() throws Exception {
-        when(transactionsService.addTransaction(any(Transaction.class)))
+        when(transactionsService.addTransaction(transactions))
                 .thenThrow(new RuntimeException("boom"));
 
         mockMvc.perform(post(BASE_URL)
                         .header("traceId", TRACE_ID)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(transaction)))
+                        .content(objectMapper.writeValueAsString(transactions)))
                 .andExpect(status().isInternalServerError());
     }
 

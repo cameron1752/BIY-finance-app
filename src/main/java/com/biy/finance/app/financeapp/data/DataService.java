@@ -54,9 +54,14 @@ public class DataService {
                 .toList();
     }
 
-    public List<Transaction> addTransaction(Transaction transaction) {
-        transactionRepository.save(transaction.toEntity(transaction.getType()));
-        return getAllTransactions(transaction.getAccountId(), transaction.getType());
+    public List<Transaction> addTransaction(List<Transaction> transactions) {
+        String accountId = transactions.getFirst().getAccountId();
+        String type = transactions.getFirst().getType();
+
+        for (Transaction transaction : transactions){
+            transactionRepository.save(transaction.toEntity(transaction.getType()));
+        }
+        return getAllTransactions(accountId, type);
     }
 
     @Transactional
@@ -68,16 +73,19 @@ public class DataService {
 
     public List<Transaction> editTransaction(Transaction transaction) {
         log.info("Editing transaction {}", transaction.getId());
-        List<Transaction> foundTransactions = getTransaction(transaction.getAccountId(), transaction.getId());
+        Transaction foundTransactions = getTransaction(transaction.getAccountId(), transaction.getId()).getFirst();
 
-        log.info("Removing old transaction {}", foundTransactions.getFirst());
+        log.info("Removing old transaction {}", foundTransactions);
         // remove old un-updated bill
-        deleteTransaction(foundTransactions.getFirst().getAccountId(), foundTransactions.getFirst().getId());
+        deleteTransaction(foundTransactions.getAccountId(), foundTransactions.getId());
 
         log.info("Adding new transaction {}", transaction);
-        // add new, updated bill
-        addTransaction(foundTransactions.getFirst().updateFrom(transaction));
+        List<Transaction> updated = new ArrayList<>();
 
-        return getAllTransactions(foundTransactions.getFirst().getAccountId(), foundTransactions.getFirst().getType());
+        updated.add(foundTransactions.updateFrom(transaction));
+        // add new, updated bill
+        addTransaction(updated);
+
+        return getAllTransactions(foundTransactions.getAccountId(), foundTransactions.getType());
     }
 }
