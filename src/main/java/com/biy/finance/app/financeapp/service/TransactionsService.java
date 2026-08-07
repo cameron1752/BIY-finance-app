@@ -31,7 +31,7 @@ public class TransactionsService {
         return dataService.deleteTransaction(accountId, id);
     }
 
-    public List<Transaction> editTransaction(Transaction transaction) {
-        return dataService.editTransaction(transaction);
+    public List<Transaction> editTransaction(List<Transaction> transactions) {
+        return dataService.editTransaction(transactions);
     }
 }

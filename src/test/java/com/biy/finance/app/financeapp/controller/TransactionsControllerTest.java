@@ -232,15 +232,15 @@ class TransactionsControllerTest {
 
     @Test
     void editTransaction_validRequest_returnsUpdatedTransaction() throws Exception {
-        when(transactionsService.editTransaction(any(Transaction.class))).thenReturn(Collections.singletonList(transaction));
+        when(transactionsService.editTransaction(transactions)).thenReturn(transactions);
 
         mockMvc.perform(patch(BASE_URL)
                         .header("traceId", TRACE_ID)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(transaction)))
+                        .content(objectMapper.writeValueAsString(transactions)))
                 .andExpect(status().isOk());
 
-        verify(transactionsService, times(1)).editTransaction(any(Transaction.class));
+        verify(transactionsService, times(1)).editTransaction(transactions);
     }
 
     @Test
@@ -255,13 +255,13 @@ class TransactionsControllerTest {
 
     @Test
     void editTransaction_serviceThrowsException_returnsServerError() throws Exception {
-        when(transactionsService.editTransaction(any(Transaction.class)))
+        when(transactionsService.editTransaction(transactions))
                 .thenThrow(new RuntimeException("boom"));
 
         mockMvc.perform(patch(BASE_URL)
                         .header("traceId", TRACE_ID)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(transaction)))
+                        .content(objectMapper.writeValueAsString(transactions)))
                 .andExpect(status().isInternalServerError());
     }
 }

@@ -71,21 +71,27 @@ public class DataService {
         return getAllTransactions(accountId, foundTransaction.getFirst().getType());
     }
 
-    public List<Transaction> editTransaction(Transaction transaction) {
-        log.info("Editing transaction {}", transaction.getId());
-        Transaction foundTransactions = getTransaction(transaction.getAccountId(), transaction.getId()).getFirst();
-
-        log.info("Removing old transaction {}", foundTransactions);
-        // remove old un-updated bill
-        deleteTransaction(foundTransactions.getAccountId(), foundTransactions.getId());
-
-        log.info("Adding new transaction {}", transaction);
+    public List<Transaction> editTransaction(List<Transaction> transactions) {
+        // list of updated transactions
         List<Transaction> updated = new ArrayList<>();
+        String accountId = transactions.getFirst().getAccountId();
+        String type = transactions.getFirst().getType();
 
-        updated.add(foundTransactions.updateFrom(transaction));
+        for (Transaction transaction : transactions){
+            log.info("Editing transaction {}", transaction.getId());
+            Transaction foundTransactions = getTransaction(transaction.getAccountId(), transaction.getId()).getFirst();
+
+            log.info("Removing old transaction {}", foundTransactions);
+            // remove old un-updated bill
+            deleteTransaction(foundTransactions.getAccountId(), foundTransactions.getId());
+
+            log.info("Adding new transaction {}", transaction);
+            updated.add(foundTransactions.updateFrom(transaction));
+        }
+
         // add new, updated bill
         addTransaction(updated);
 
-        return getAllTransactions(foundTransactions.getAccountId(), foundTransactions.getType());
+        return getAllTransactions(accountId, type);
     }
 }

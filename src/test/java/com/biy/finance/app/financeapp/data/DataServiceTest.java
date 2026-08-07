@@ -144,7 +144,7 @@ class DataServiceTest {
         when(transactionRepository.fetchAllByType(eq(ACCOUNT_ID), anyString()))
                 .thenReturn(List.of(entity));
 
-        List<Transaction> result = dataService.editTransaction(transaction);
+        List<Transaction> result = dataService.editTransaction(transactions);
 
         verify(transactionRepository).deleteById(anyString());
         verify(transactionRepository).save(any(TransactionsEntity.class));

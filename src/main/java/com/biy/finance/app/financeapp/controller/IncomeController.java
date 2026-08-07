@@ -58,9 +58,9 @@ public class IncomeController {
     @CrossOrigin(origins = "http://localhost:5173")
     @PatchMapping
     public ResponseEntity editIncome(@RequestHeader(value = "traceId", required = true) String traceId,
-                                     @Valid @RequestBody Transaction Income){
-        log.info("Editing Income {}", Income.getId());
-        return ResponseEntity.ok(transactionsService.editTransaction(Income));
+                                     @Valid @RequestBody List<Transaction> incomes){
+        log.info("Editing income {}", incomes);
+        return ResponseEntity.ok(transactionsService.editTransaction(incomes));
     }
 
 }

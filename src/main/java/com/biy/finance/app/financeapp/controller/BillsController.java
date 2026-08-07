@@ -58,9 +58,9 @@ public class BillsController {
     @CrossOrigin(origins = "http://localhost:5173")
     @PatchMapping
     public ResponseEntity editBill(@RequestHeader(value = "traceId", required = true) String traceId,
-                                   @Valid @RequestBody Transaction bill){
-        log.info("Editing bill {}", bill.getId());
-        return ResponseEntity.ok(transactionsService.editTransaction(bill));
+                                   @Valid @RequestBody List<Transaction> bills){
+        log.info("Editing bill {}", bills);
+        return ResponseEntity.ok(transactionsService.editTransaction(bills));
     }
 
 }
