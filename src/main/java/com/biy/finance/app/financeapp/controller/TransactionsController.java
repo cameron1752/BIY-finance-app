@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static java.util.Objects.isNull;
 
 @Slf4j
@@ -39,10 +41,10 @@ public class TransactionsController {
     @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping
     public ResponseEntity addTransaction(@RequestHeader(value = "traceId", required = true) String traceId,
-                                         @Valid @RequestBody Transaction transaction){
+                                         @Valid @RequestBody List<Transaction> transactions){
 
-        log.info("Adding transaction {}", transaction);
-        return ResponseEntity.ok(transactionsService.addTransaction(transaction));
+        log.info("Adding transactions {}", transactions);
+        return ResponseEntity.ok(transactionsService.addTransaction(transactions));
 
     }
 
@@ -57,9 +59,9 @@ public class TransactionsController {
     @CrossOrigin(origins = "http://localhost:5173")
     @PatchMapping
     public ResponseEntity editTransaction(@RequestHeader(value = "traceId", required = true) String traceId,
-                                          @Valid @RequestBody Transaction transaction){
-        log.info("Editing bill {}", transaction.getId());
-        return ResponseEntity.ok(transactionsService.editTransaction(transaction));
+                                          @Valid @RequestBody List<Transaction> transactions){
+        log.info("Editing transactions {}", transactions);
+        return ResponseEntity.ok(transactionsService.editTransaction(transactions));
     }
 
 }

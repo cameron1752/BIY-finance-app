@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,6 +39,7 @@ class DataServiceTest {
 
     private TransactionsEntity entity;
     private Transaction transaction;
+    private List<Transaction> transactions = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
@@ -50,6 +52,8 @@ class DataServiceTest {
         transaction.setDescription("Trader Joe's");
         transaction.setAmount(50.00);
         transaction.setPending(false);
+
+        transactions.add(transaction);
     }
 
     private TransactionsEntity mockEntity() {
@@ -112,7 +116,7 @@ class DataServiceTest {
         when(transactionRepository.fetchAllByType(ACCOUNT_ID, TYPE))
                 .thenReturn(List.of(entity));
 
-        List<Transaction> result = dataService.addTransaction(transaction);
+        List<Transaction> result = dataService.addTransaction(transactions);
 
         verify(transactionRepository).save(any(TransactionsEntity.class));
         assertThat(result).hasSize(1);
@@ -140,7 +144,7 @@ class DataServiceTest {
         when(transactionRepository.fetchAllByType(eq(ACCOUNT_ID), anyString()))
                 .thenReturn(List.of(entity));
 
-        List<Transaction> result = dataService.editTransaction(transaction);
+        List<Transaction> result = dataService.editTransaction(transactions);
 
         verify(transactionRepository).deleteById(anyString());
         verify(transactionRepository).save(any(TransactionsEntity.class));

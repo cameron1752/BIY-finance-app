@@ -54,9 +54,14 @@ public class DataService {
                 .toList();
     }
 
-    public List<Transaction> addTransaction(Transaction transaction) {
-        transactionRepository.save(transaction.toEntity(transaction.getType()));
-        return getAllTransactions(transaction.getAccountId(), transaction.getType());
+    public List<Transaction> addTransaction(List<Transaction> transactions) {
+        String accountId = transactions.getFirst().getAccountId();
+        String type = transactions.getFirst().getType();
+
+        for (Transaction transaction : transactions){
+            transactionRepository.save(transaction.toEntity(transaction.getType()));
+        }
+        return getAllTransactions(accountId, type);
     }
 
     @Transactional
@@ -66,18 +71,27 @@ public class DataService {
         return getAllTransactions(accountId, foundTransaction.getFirst().getType());
     }
 
-    public List<Transaction> editTransaction(Transaction transaction) {
-        log.info("Editing transaction {}", transaction.getId());
-        List<Transaction> foundTransactions = getTransaction(transaction.getAccountId(), transaction.getId());
+    public List<Transaction> editTransaction(List<Transaction> transactions) {
+        // list of updated transactions
+        List<Transaction> updated = new ArrayList<>();
+        String accountId = transactions.getFirst().getAccountId();
+        String type = transactions.getFirst().getType();
 
-        log.info("Removing old transaction {}", foundTransactions.getFirst());
-        // remove old un-updated bill
-        deleteTransaction(foundTransactions.getFirst().getAccountId(), foundTransactions.getFirst().getId());
+        for (Transaction transaction : transactions){
+            log.info("Editing transaction {}", transaction.getId());
+            Transaction foundTransactions = getTransaction(transaction.getAccountId(), transaction.getId()).getFirst();
 
-        log.info("Adding new transaction {}", transaction);
+            log.info("Removing old transaction {}", foundTransactions);
+            // remove old un-updated bill
+            deleteTransaction(foundTransactions.getAccountId(), foundTransactions.getId());
+
+            log.info("Adding new transaction {}", transaction);
+            updated.add(foundTransactions.updateFrom(transaction));
+        }
+
         // add new, updated bill
-        addTransaction(foundTransactions.getFirst().updateFrom(transaction));
+        addTransaction(updated);
 
-        return getAllTransactions(foundTransactions.getFirst().getAccountId(), foundTransactions.getFirst().getType());
+        return getAllTransactions(accountId, type);
     }
 }

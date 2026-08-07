@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -49,6 +50,7 @@ class BillsControllerTest {
     private static final String TRANSACTION_ID = "txn-789";
 
     private Transaction transaction;
+    private List<Transaction> transactions = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
@@ -56,6 +58,8 @@ class BillsControllerTest {
         transaction.setAccountId("123abc456def");
         transaction.setCategory("test");
         transaction.setDate(LocalDate.now());
+
+        transactions.add(transaction);
     }
 
     // ---------------------------------------------------------------------
@@ -125,15 +129,16 @@ class BillsControllerTest {
 
     @Test
     void addTransaction_validRequest_returnsCreatedTransaction() throws Exception {
-        when(transactionsService.addTransaction(any(Transaction.class))).thenReturn(Collections.singletonList(transaction));
+        when(transactionsService.addTransaction(transactions))
+                .thenReturn(transactions);
 
         mockMvc.perform(post(BASE_URL)
                         .header("traceId", TRACE_ID)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(transaction)))
+                        .content(objectMapper.writeValueAsString(transactions)))
                 .andExpect(status().isOk());
 
-        verify(transactionsService, times(1)).addTransaction(any(Transaction.class));
+        verify(transactionsService, times(1)).addTransaction(transactions);
     }
 
     @Test
@@ -159,13 +164,13 @@ class BillsControllerTest {
 
     @Test
     void addTransaction_serviceThrowsException_returnsServerError() throws Exception {
-        when(transactionsService.addTransaction(any(Transaction.class)))
+        when(transactionsService.addTransaction(transactions))
                 .thenThrow(new RuntimeException("boom"));
 
         mockMvc.perform(post(BASE_URL)
                         .header("traceId", TRACE_ID)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(transaction)))
+                        .content(objectMapper.writeValueAsString(transactions)))
                 .andExpect(status().isInternalServerError());
     }
 
@@ -226,22 +231,22 @@ class BillsControllerTest {
 
     @Test
     void editTransaction_validRequest_returnsUpdatedTransaction() throws Exception {
-        when(transactionsService.editTransaction(any(Transaction.class))).thenReturn(Collections.singletonList(transaction));
+        when(transactionsService.editTransaction(transactions)).thenReturn(transactions);
 
         mockMvc.perform(patch(BASE_URL)
                         .header("traceId", TRACE_ID)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(transaction)))
+                        .content(objectMapper.writeValueAsString(transactions)))
                 .andExpect(status().isOk());
 
-        verify(transactionsService, times(1)).editTransaction(any(Transaction.class));
+        verify(transactionsService, times(1)).editTransaction(transactions);
     }
 
     @Test
     void editTransaction_missingTraceId_returnsBadRequest() throws Exception {
         mockMvc.perform(patch(BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(transaction)))
+                        .content(objectMapper.writeValueAsString(transactions)))
                 .andExpect(status().isBadRequest());
 
         verifyNoInteractions(transactionsService);
@@ -249,13 +254,13 @@ class BillsControllerTest {
 
     @Test
     void editTransaction_serviceThrowsException_returnsServerError() throws Exception {
-        when(transactionsService.editTransaction(any(Transaction.class)))
+        when(transactionsService.editTransaction(transactions))
                 .thenThrow(new RuntimeException("boom"));
 
         mockMvc.perform(patch(BASE_URL)
                         .header("traceId", TRACE_ID)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(transaction)))
+                        .content(objectMapper.writeValueAsString(transactions)))
                 .andExpect(status().isInternalServerError());
     }
 }
