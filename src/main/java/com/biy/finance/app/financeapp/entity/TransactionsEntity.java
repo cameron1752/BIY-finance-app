@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Audited;
-
 import java.time.LocalDate;
 
 @Entity
@@ -18,7 +16,7 @@ import java.time.LocalDate;
 public class TransactionsEntity {
     @Id
     @Column(name = "account_id")
-    private String accountId;
+    private long accountId;
 
     @Id
     @Column(name = "transaction_id")

@@ -1,10 +1,13 @@
 package com.biy.finance.app.financeapp.config;
 
+import com.biy.finance.app.financeapp.service.AccountsService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -16,6 +19,8 @@ import java.util.List;
 @Slf4j
 public class SecurityConfig {
     @Value("${spring.security.oauth2.client.registration.github.client-secret}") String clientSecret;
+    @Autowired
+    AccountsService accountsService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -26,7 +31,14 @@ public class SecurityConfig {
                     .anyRequest().authenticated()
             )
             .oauth2Login(oauth2 -> oauth2
-                    .defaultSuccessUrl("http://localhost:5173/", true)
+                    .successHandler((request, response, authentication) -> {
+                        OAuth2User oauthUser =
+                                (OAuth2User) authentication.getPrincipal();
+
+                        accountsService.createOrUpdateAccount(oauthUser);
+
+                        response.sendRedirect("http://localhost:5173/");
+                    })
             )
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable()); // reconsider for production; see note below

@@ -1,6 +1,8 @@
 package com.biy.finance.app.financeapp.controller;
 
+import com.biy.finance.app.financeapp.model.Account;
 import com.biy.finance.app.financeapp.model.Transaction;
+import com.biy.finance.app.financeapp.service.AccountsService;
 import com.biy.finance.app.financeapp.service.TransactionsService;
 import com.biy.finance.app.financeapp.util.Constants;
 import jakarta.validation.Valid;
@@ -9,6 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,19 +27,20 @@ import static java.util.Objects.isNull;
 public class TransactionsController {
     @Autowired
     TransactionsService transactionsService;
+    @Autowired
+    AccountsService accountsService;
 
     @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping
     public ResponseEntity getTransactions(@RequestHeader(value = "id", required = false) String id,
-                                          @RequestHeader(value = "traceId", required = true) String traceId,
-                                          @RequestHeader(value = "accountId", required = true) String accountId){
-
+                                          @RequestHeader(value = "traceId", required = true) String traceId
+                                            ){
         if (isNull(id)){
-            log.info("Getting all {} for account {}", Constants.TRANSACTION, accountId);
-            return ResponseEntity.ok(transactionsService.getAllTransactions(accountId, Constants.TRANSACTION));
+            log.info("Getting all {}", Constants.TRANSACTION);
+            return ResponseEntity.ok(transactionsService.getAllTransactions(Constants.TRANSACTION));
         } else {
-            log.info("Getting transaction with ID {} for account {}", id, accountId);
-            return ResponseEntity.ok(transactionsService.getTransaction(accountId, id));
+            log.info("Getting transaction with ID {}", id);
+            return ResponseEntity.ok(transactionsService.getTransaction(id));
         }
     }
 
@@ -50,10 +56,9 @@ public class TransactionsController {
 
     @DeleteMapping
     public ResponseEntity deleteTransaction(@RequestHeader(value = "traceId", required = true) String traceId,
-                                            @RequestHeader(value = "id", required = true) String id,
-                                            @RequestHeader(value = "accountId", required = true) String accountId){
+                                            @RequestHeader(value = "id", required = true) String id){
         log.info("Removing transaction with ID of {}", id);
-        return ResponseEntity.ok(transactionsService.deleteTransaction(accountId, id));
+        return ResponseEntity.ok(transactionsService.deleteTransaction(id));
     }
 
     @CrossOrigin(origins = "http://localhost:5173")

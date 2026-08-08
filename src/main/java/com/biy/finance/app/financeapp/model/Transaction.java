@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @ValidTransaction
 public class Transaction {
-    private String accountId;
+    private long accountId;
     private String id;
     private LocalDate date;
     private String category;
@@ -41,7 +41,7 @@ public class Transaction {
     @JsonCreator
     public Transaction(
             @JsonProperty("id") String id,
-            @JsonProperty("accountId") String accountId,
+            @JsonProperty("accountId") long accountId,
             @JsonProperty("date") LocalDate date,
             @JsonProperty("category") String category,
             @JsonProperty("description") String description,
