@@ -15,13 +15,13 @@ public class ValidTransactionValidator implements ConstraintValidator<ValidTrans
        // implementation of bean n stuff
 
         // account id
-        if (validateString(request.getAccountId())){
-            context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("accountId must not be empty")
-                    .addPropertyNode("accountId")
-                    .addConstraintViolation();
-            valid = false;
-        }
+//        if (validateString(request.getAccountId())){
+//            context.disableDefaultConstraintViolation();
+//            context.buildConstraintViolationWithTemplate("accountId must not be empty")
+//                    .addPropertyNode("accountId")
+//                    .addConstraintViolation();
+//            valid = false;
+//        }
 
         // date
         if (request.getDate() == null){

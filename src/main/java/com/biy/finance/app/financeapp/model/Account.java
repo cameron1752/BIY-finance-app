@@ -1,5 +1,6 @@
 package com.biy.finance.app.financeapp.model;
 
+import com.biy.finance.app.financeapp.entity.AccountEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,9 +11,17 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Account {
-    private String id;
-    private Settings settings;
-    private List<Transaction> transactions;
-    private List<Transaction> bills;
-    private List<Transaction> incomes;
+    public Account(AccountEntity accountEntity){
+        this.id = accountEntity.getId();
+        this.providerId = accountEntity.getProviderId();
+        this.username = accountEntity.getUsername();
+        this.name = accountEntity.getName();
+        this.settings = accountEntity.getSettings();
+    }
+
+    private long id;
+    private String providerId;
+    private String username;
+    private String name;
+    private String settings;
 }

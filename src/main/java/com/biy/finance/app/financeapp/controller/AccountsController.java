@@ -24,6 +24,6 @@ public class AccountsController {
     public ResponseEntity getAccount(@RequestHeader(value = "traceId") String traceId,
                                      @RequestHeader(value = "accountId") String accountId){
 
-        return ResponseEntity.ok(accountsService.getAccount(accountId));
+        return ResponseEntity.ok(accountsService.getCurrentAccount());
     }
 }
