@@ -26,11 +26,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        Account account = accountsService.getCurrentAccount();
-        return ResponseEntity.ok(Map.of(
-                "username", account.getUsername(),
-                "id", account.getId(),
-                "providerId", account.getProviderId())
-        );
+        return ResponseEntity.ok(accountsService.getCurrentAccount());
     }
 }

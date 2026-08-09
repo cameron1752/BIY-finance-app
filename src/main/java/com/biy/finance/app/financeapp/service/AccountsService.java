@@ -44,6 +44,7 @@ public class AccountsService {
         if (user.isEmpty()){
             log.info("New account being created");
             AccountEntity account = new AccountEntity();
+            account.setAvatarUrl(oauthUser.getAttribute("picture"));
             account.setProviderId(googleId);
             account.setUsername(oauthUser.getAttribute("email"));
             account.setName(oauthUser.getAttribute("name"));
@@ -63,6 +64,7 @@ public class AccountsService {
         if (user.isEmpty()){
             log.info("New account being created");
             AccountEntity account = new AccountEntity();
+            account.setAvatarUrl(oauthUser.getAttribute("avatar_url"));
             account.setProviderId(githubId);
             account.setUsername(oauthUser.getAttribute("login"));
             account.setName(oauthUser.getAttribute("name"));
