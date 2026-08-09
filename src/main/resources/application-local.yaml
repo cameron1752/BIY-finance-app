@@ -25,10 +25,13 @@
       oauth2:
         client:
           registration:
-#            google:
-#              client-id:
-#              client-secret:
-#              scope:
+            google:
+              client-id: 784569823627-42f024jfpn179iussu8nr1s63evippkv.apps.googleusercontent.com
+              client-secret: ${GOOGLE_CLIENT_SECRET}
+              scope:
+                - openid
+                - profile
+                - email
             github:
               client-id: Ov23liwKSXDeZenKXoav
               client-secret: ${GITHUB_CLIENT_SECRET}

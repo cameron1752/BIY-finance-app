@@ -2,5 +2,3 @@
 // todo: error handling
 // todo: sums on categories
 // todo: add balances n such to account
-// todo: auth ;)
-// todo: update cards after updates / additions
