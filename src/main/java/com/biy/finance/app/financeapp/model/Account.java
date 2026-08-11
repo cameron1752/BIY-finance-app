@@ -16,6 +16,7 @@ public class Account {
         this.providerId = accountEntity.getProviderId();
         this.username = accountEntity.getUsername();
         this.name = accountEntity.getName();
+        this.avatarUrl = accountEntity.getAvatarUrl();
         this.settings = accountEntity.getSettings();
     }
 
@@ -23,5 +24,6 @@ public class Account {
     private String providerId;
     private String username;
     private String name;
+    private String avatarUrl;
     private String settings;
 }

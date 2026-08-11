@@ -1,12 +1,15 @@
 package com.biy.finance.app.financeapp.config;
 
 import com.biy.finance.app.financeapp.service.AccountsService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -34,12 +37,40 @@ public class SecurityConfig {
                     .successHandler((request, response, authentication) -> {
                         OAuth2User oauthUser =
                                 (OAuth2User) authentication.getPrincipal();
-
-                        accountsService.createOrUpdateAccount(oauthUser);
+                        // convert to token to get provider smh
+                        OAuth2AuthenticationToken token =
+                                (OAuth2AuthenticationToken) authentication;
+                        // get token provider
+                        String provider = token.getAuthorizedClientRegistrationId();
+                        accountsService.createOrUpdateAccount(provider, oauthUser);
 
                         response.sendRedirect("http://localhost:5173/");
                     })
             )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            // BREAKPOINT HERE
+                            System.out.println("Authentication failed!");
+                            System.out.println(
+                                    authException.getClass().getName()
+                            );
+//                            throw new InsufficientAuthenticationException("Authentication Failed");
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json");
+
+                            response.getWriter().write("""
+                                {
+                                    "status": 401,
+                                    "error": "UNAUTHORIZED",
+                                    "message": "Authentication required"
+                                }
+                                """);
+                        }))
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setStatus(HttpServletResponse.SC_OK);
+                        }))
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable()); // reconsider for production; see note below
 

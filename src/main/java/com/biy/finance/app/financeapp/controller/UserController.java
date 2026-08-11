@@ -1,5 +1,8 @@
 package com.biy.finance.app.financeapp.controller;
 
+import com.biy.finance.app.financeapp.model.Account;
+import com.biy.finance.app.financeapp.service.AccountsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,16 +16,16 @@ import java.util.Map;
 @RestController
 public class UserController {
 
+    @Autowired
+    AccountsService accountsService;
+
     @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping("/api/me")
     public ResponseEntity<?> currentUser(@AuthenticationPrincipal OAuth2User principal) {
         if (principal == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return ResponseEntity.ok(Map.of(
-                "username", principal.getAttribute("login"),
-                "id", principal.getAttribute("id"),
-                "url", principal.getAttribute("html_url"))
-        );
+
+        return ResponseEntity.ok(accountsService.getCurrentAccount());
     }
 }

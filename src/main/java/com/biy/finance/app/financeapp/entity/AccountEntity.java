@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "accounts.sql", schema = "test")
+@Table(name = "accounts", schema = "test")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,6 +28,9 @@ public class AccountEntity {
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "url")
+    private String avatarUrl;
 
     @Column(name = "settings")
     private String settings;
