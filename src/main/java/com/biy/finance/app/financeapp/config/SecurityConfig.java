@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -46,6 +47,25 @@ public class SecurityConfig {
                         response.sendRedirect("http://localhost:5173/");
                     })
             )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            // BREAKPOINT HERE
+                            System.out.println("Authentication failed!");
+                            System.out.println(
+                                    authException.getClass().getName()
+                            );
+//                            throw new InsufficientAuthenticationException("Authentication Failed");
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json");
+
+                            response.getWriter().write("""
+                                {
+                                    "status": 401,
+                                    "error": "UNAUTHORIZED",
+                                    "message": "Authentication required"
+                                }
+                                """);
+                        }))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessHandler((request, response, authentication) -> {
